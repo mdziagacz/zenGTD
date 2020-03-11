@@ -29,4 +29,9 @@ public class TaskController {
     public List<TaskDto> getAllTasks(){
         return taskMapper.mapToListTaskDto(dbService.getAllTasks());
     }
+
+    @GetMapping(value = "/hello")
+    public String helloTest(){
+        return "hello, yes I'm working!";
+    }
 }
