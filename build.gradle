@@ -1,0 +1,63 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		classpath 'com.google.cloud.tools:appengine-gradle-plugin:2.2.0'
+	}
+}
+
+plugins {
+	id 'org.springframework.boot' version '2.2.5.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+	id 'war'
+}
+
+apply plugin: 'com.google.cloud.tools.appengine'
+
+group = 'com.zengtd'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+appengine {
+	deploy {   // deploy configuration
+		stopPreviousVersion = true  // default - stop the current version
+		promote = true              // default - & make this the current version
+		projectId = 'GCLOUD_CONFIG' // delegate to project in gcloud config
+		version = 'GCLOUD_CONFIG'   // delegate to gcloud to generate a version
+	}
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'mysql:mysql-connector-java'
+	annotationProcessor 'org.projectlombok:lombok'
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	compile('com.google.cloud.sql:mysql-socket-factory-connector-j-8:1.0.15')
+	compile('com.google.cloud:google-cloud-spanner-hibernate-dialect:1.1.0')
+	compile('com.google.cloud:google-cloud-spanner-jdbc:1.13.0')
+	compile('org.hibernate:hibernate-core:5.4.12.Final')
+
+}
+
+test {
+	useJUnitPlatform()
+}
